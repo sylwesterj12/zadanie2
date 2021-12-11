@@ -1,0 +1,46 @@
+version: '3.7'
+
+
+services:
+  nginx:
+    build: nginx/
+    ports:
+      - "6666:80"
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      - php
+      - mysql
+      - phpMyAdmin
+    
+  php:
+    build: php/
+    networks:
+      - backend
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile.debian
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    volumes:
+      - bazadanychV:/zad2
+    networks:
+      - backend   
+  phpMyAdmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "6001:80"
+    networks:
+      - backend
+      
+
+networks:
+  backend:
+  frontend:
+
+volumes:
+  bazadanychV:
